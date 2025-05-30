@@ -42,6 +42,12 @@ body {
   font-size: 3.5rem;
   margin-bottom: 1rem;
 }
+  @media screen and (max-width: 871px) {
+  .question {
+    width: 6vw;         /* mengecil dari ukuran normal */
+
+  }
+}
 .button-container {
   display: flex;
   justify-content: center;
