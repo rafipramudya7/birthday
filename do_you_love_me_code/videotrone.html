@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cute Love Frame</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ffe6e9;
+      overflow: hidden;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      position: relative;
+    }
+    #playVideo{
+      opacity: 0;
+    }
+    .floating {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0; /* Mulai dari invisible */
+      animation-timing-function: ease-in-out;
+      transition: opacity 1s ease; /* transisi smooth */
+    }
+
+    .floating.visible {
+      opacity: 0.3 !important; /* opacity normal heart & sparkle */
+    }
+
+    .heart {
+      background: pink;
+    }
+
+    .sparkle {
+      background: gold;
+    }
+
+    .videotron {
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border: 4px solid #f9a8d4;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      opacity: 0; /* mulai tidak terlihat */
+      transition: opacity 2s ease;
+      position: relative;
+    }
+
+    .videotron.visible {
+      opacity: 1;
+    }
+
+    .videotron video {
+      width: 350px;
+      height: 200px;
+      border-radius: 16px;
+      object-fit: cover;
+    }
+
+    .videotron p {
+      color: #be185d;
+      margin-top: 8px;
+      font-size: 1.2rem;
+    }
+
+    @keyframes floatAnim {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(10deg);
+      }
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      
+    }
+    @keyframes hilang {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    display: none;
+  }
+}
+.hilang {
+  animation: hilang 2s forwards; /* 2 detik, dan berhenti di akhir (forwards) */
+}
+@keyframes muncul {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#birthdayMessage {
+  font-weight: 800;
+font-style: italic;
+
+  display: none;
+  position: fixed;
+    font-family: "Quicksand", sans-serif;
+  font-size: 70px;
+  color: #ff69b4;
+  text-shadow: 2px 2px 5px #000;
+  z-index: 9999;
+  text-align: center;
+  opacity: 0;
+}
+
+/* Class untuk menampilkan dengan animasi */
+#birthdayMessage.show {
+  display: block;
+  animation: muncul 2s ease-out forwards;
+}
+
+  </style>
+</head>
+<body>
+<div class="videotron" id="videotron">
+  <video id="videotronVideo" src="DhellVid.mp4" controls></video>
+  <p>You're the sparkle of my screen ✨</p>
+  <button id="playVideo"></button>
+</div>
+<p id="birthdayMessage">Happy Birthday 🎉</p>
+
+  <script>
+    // Gunakan audio asli dari video
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const video = document.getElementById("videotronVideo");
+  const playButton = document.getElementById("playVideo");
+  const videotron = document.getElementById("videotron");
+
+  // Saat tombol diklik
+  playButton.addEventListener("click", function () {s
+    video.muted = false;        // Hidupkan suara
+    video.currentTime = 0;      // Kembali ke awal
+    video.play();               // Mulai putar
+    playButton.style.display = "none"; // Sembunyikan tombol
+  });
+
+  // Saat video selesai
+  video.addEventListener("ended", function () {
+    videotron.classList.add("hilang");
+    videotron.addEventListener("animationend", function () {
+      videotron.style.display = "none";
+      birthdayMessage.classList.remove("hidden");
+      birthdayMessage.classList.add("show");
+        }, { once: true });
+  });
+});
+
+
+
+
+    function createFloatingElement(type, size, top, left, delay, duration) {
+      const el = document.createElement('div');
+      el.className = `floating ${type}`;
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+      el.style.top = top;
+      el.style.left = left;
+      el.style.animation = `floatAnim ${duration}s ease-in-out ${delay}s infinite`;
+      el.style.opacity = 0; // mulai invisible
+      document.body.appendChild(el);
+      return el;
+    }
+
+    const hearts = [];
+    const sparkles = [];
+
+    const generateElements = (count, type) => {
+      const arr = [];
+      for (let i = 0; i < count; i++) {
+        const size = Math.floor(Math.random() * 15) + 20;
+        const top = `${Math.floor(Math.random() * 90)}%`;
+        const left = `${Math.floor(Math.random() * 90)}%`;
+        const delay = Math.random() * 4;
+        const duration = Math.floor(Math.random() * 6) + 6;
+        const el = createFloatingElement(type, size, top, left, delay, duration);
+        arr.push(el);
+      }
+      return arr;
+    };
+
+    // Generate semua elemen
+    hearts.push(...generateElements(18, 'heart'));
+    sparkles.push(...generateElements(10, 'sparkle'));
+
+    // Fade-in elemen satu per satu dengan jeda lebih cepat (100ms)
+    function fadeInElements(elements, startDelay = 0, interval = 100) {
+      elements.forEach((el, i) => {
+        setTimeout(() => {
+          el.classList.add('visible');
+        }, startDelay + i * interval);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Munculkan hearts dulu
+      fadeInElements(hearts, 0, 100);
+      // Setelah hearts muncul, munculkan sparkles
+      setTimeout(() => {
+        fadeInElements(sparkles, 0, 100);
+      }, hearts.length * 100 + 200);
+
+      // Setelah semua floating muncul, munculkan videotron
+      const videotron = document.getElementById('videotron');
+      setTimeout(() => {
+        videotron.classList.add('visible');
+      }, (hearts.length + sparkles.length) * 100 + 600);
+    });
+
+
+
+
+  </script>
+</body>
+</html>
